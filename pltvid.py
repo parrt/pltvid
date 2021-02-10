@@ -2,14 +2,17 @@ import matplotlib.pyplot as plt
 import random
 import PIL
 import os
+from pdf2image import convert_from_path
+
 
 class Capture:
-    def __init__(self, dpi=300, save_frames=False):
+    def __init__(self, dpi=300, save_frames=False,
+                 frame_format:('pdf','png','gif','jpg')='pdf'):
         self.frame = 0
         self.dpi = dpi
         self.save_frames = save_frames
         self.frame_filename = f"frame-{int(random.randrange(10000, 99999))}"
-        self.frame_format = 'png'
+        self.frame_format = frame_format
 
     def snap(self, n=1):  # save one or more frames of current picture
         for i in range(n):
@@ -20,7 +23,12 @@ class Capture:
         plt.close()
 
     def save(self, filename, duration=100, loop=0):
-        images = [PIL.Image.open(image) for image in
+        if self.frame_format=='pdf':
+            images = [convert_from_path(image)[0] for image in
+                      [f"/tmp/{self.frame_filename}-{i:05d}.{self.frame_format}"
+                       for i in range(1, self.frame + 1)]]
+        else:
+            images = [PIL.Image.open(image) for image in
                   [f"/tmp/{self.frame_filename}-{i:05d}.{self.frame_format}"
                    for i in range(1, self.frame + 1)]]
         if not filename.endswith(".gif"):
