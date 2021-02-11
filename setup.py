@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='pltvid',
-    version='0.2',
+    version='0.2.1',
     url='https://github.com/parrt/pltvid',
     license='MIT',
     py_modules=['pltvid'],

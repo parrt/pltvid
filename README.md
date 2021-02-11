@@ -10,7 +10,11 @@ for x in np.arange(0,1,.1):
     ax.text(x, 0.5, "hi")
     camera.snap()
 
-camera.save("/tmp/sample.gif", duration=200)
+camera.save("/tmp/sample.png", duration=200)
 ```
+
+Can save animations as .png or .gif; .png is much more hi-res but powerpoint can only animate gifs, if that matters to you.
+
+
 
 This is really meant for my own use, but go for it if you find it helpful.

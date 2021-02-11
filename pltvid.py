@@ -24,15 +24,15 @@ class Capture:
 
     def save(self, filename, duration=100, loop=0):
         if self.frame_format=='pdf':
-            images = [convert_from_path(image)[0] for image in
+            images = [convert_from_path(image, dpi=self.dpi)[0] for image in
                       [f"/tmp/{self.frame_filename}-{i:05d}.{self.frame_format}"
                        for i in range(1, self.frame + 1)]]
         else:
             images = [PIL.Image.open(image) for image in
                   [f"/tmp/{self.frame_filename}-{i:05d}.{self.frame_format}"
                    for i in range(1, self.frame + 1)]]
-        if not filename.endswith(".gif"):
-            raise ValueError(f"Can only save movies as GIFs: {filename}")
+        if not filename.endswith(".gif") and not filename.endswith(".png"):
+            raise ValueError(f"Can only save movies as GIFs or PNGs: {filename}")
         images[0].save(filename,
                        save_all=True,
                        append_images=images,
