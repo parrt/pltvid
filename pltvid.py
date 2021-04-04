@@ -4,8 +4,11 @@ import PIL
 import os
 from pdf2image import convert_from_path
 
+import tempfile
+
 
 class Capture:
+
     def __init__(self, dpi=300, save_frames=False,
                  frame_format:('pdf','png','gif','jpg')='pdf'):
         self.frame = 0
@@ -13,23 +16,24 @@ class Capture:
         self.save_frames = save_frames
         self.frame_filename = f"frame-{int(random.randrange(10000, 99999))}"
         self.frame_format = frame_format
+        self.tmp = tempfile.gettempdir()
 
     def snap(self, n=1):  # save one or more frames of current picture
         for i in range(n):
             self.frame += 1
             plt.savefig(
-                f"/tmp/{self.frame_filename}-{self.frame:05d}.{self.frame_format}",
+                f"/{self.tmp}/{self.frame_filename}-{self.frame:05d}.{self.frame_format}",
                 bbox_inches=0, pad_inches=0, dpi=self.dpi)
         plt.close()
 
     def save(self, filename, duration=100, loop=0):
         if self.frame_format=='pdf':
             images = [convert_from_path(image, dpi=self.dpi)[0] for image in
-                      [f"/tmp/{self.frame_filename}-{i:05d}.{self.frame_format}"
+                      [f"/{self.tmp}/{self.frame_filename}-{i:05d}.{self.frame_format}"
                        for i in range(1, self.frame + 1)]]
         else:
             images = [PIL.Image.open(image) for image in
-                  [f"/tmp/{self.frame_filename}-{i:05d}.{self.frame_format}"
+                  [f"/{self.tmp}/{self.frame_filename}-{i:05d}.{self.frame_format}"
                    for i in range(1, self.frame + 1)]]
         if not filename.endswith(".gif") and not filename.endswith(".png"):
             raise ValueError(f"Can only save movies as GIFs or PNGs: {filename}")
@@ -40,6 +44,6 @@ class Capture:
                        loop=loop)
         if not self.save_frames:
             # remove temp files
-            for image in [f"/tmp/{self.frame_filename}-{i:05d}.{self.frame_format}" for i
+            for image in [f"/{self.tmp}/{self.frame_filename}-{i:05d}.{self.frame_format}" for i
                           in range(1, self.frame + 1)]:
                 os.remove(image)
