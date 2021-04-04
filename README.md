@@ -2,6 +2,16 @@
 
 A simple library to capture multiple matplotlib plots as a GIF movie, inspired by the [library](https://github.com/jwkvam/celluloid) from @jwkvam.  See [examples.ipynb](examples.ipynb)
 
+This notebook requires poppler lib due to pltvid lib
+
+On mac:
+
+```bash
+brew install poppler
+```
+
+Example:
+
 ```python
 camera = pltvid.Capture()
 
